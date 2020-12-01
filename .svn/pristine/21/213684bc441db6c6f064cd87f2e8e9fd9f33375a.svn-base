@@ -1,0 +1,123 @@
+// Finish and comment me!
+
+/*
+ * TCSS 305 – Fall 2020
+ * Assignment 1 – BookStore 
+ */
+
+package model;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+
+
+/**
+ * Cart class take item's and sum of item's cost
+ * 
+ * 
+ * @author Jaehong Lee Student
+ * @version Fall 2020 
+ */
+
+public class Cart {
+    
+    // constants (static final fields)
+    /** A percentage of discount */
+    private static final BigDecimal DISCOUNT = new BigDecimal("0.05");
+    
+    
+    // instance fields
+    
+    /** hashmap for storing item and itemOrder's price. */
+    private Map<Item, BigDecimal> myCart;
+    
+    /** user membership */
+    private boolean myMembership;
+
+    // constructors
+    
+    /**
+     *  Constructs a Cart
+     */
+    public Cart() {
+        this.myCart = new HashMap<Item, BigDecimal>();
+        myMembership = false;
+    }
+    
+    /**
+     * add given an item and an item's total cost in HashMap.
+     * if there is same item, update the item's total cost
+     */
+    public void add(final ItemOrder theOrder) {
+        Objects.requireNonNull(theOrder, "theOrder shouldn't null");
+        myCart.put(theOrder.getItem(), theOrder.totalCost());
+    }
+
+    /**
+     * set whether user have membership or not
+     */
+    public void setMembership(final boolean theMembership) {
+        this.myMembership = theMembership;
+    }
+
+    
+    /**
+     * Calculate the total cost for all of the item's cost
+     * 
+     * @return items' (added in Cart) total cost as a BigDecimal.
+     */
+    public BigDecimal calculateTotal() {
+        
+        BigDecimal totalCost = BigDecimal.ZERO;
+        
+        for(Item item : myCart.keySet()) {
+            totalCost = totalCost.add(myCart.get(item));
+        }
+        
+        if(myMembership) {
+            if(totalCost.doubleValue() > 30.0) {
+                // totalCost = totalCost - (totalCost * discount);
+                totalCost = totalCost.subtract(totalCost.multiply(DISCOUNT));
+            }
+        }
+        return totalCost.setScale(2, RoundingMode.HALF_EVEN);
+        
+    }
+    
+    /**
+     * reset Cart.
+     */
+    public void clear() {
+        myCart = new HashMap<Item, BigDecimal>();
+    }
+    
+    
+    /**
+     * How many items in my Cart
+     * 
+     * @return items' (added in Cart) total cost as a BigDecimal.
+     */
+    public int getCartSize() {
+        return myCart.size();
+    }
+
+    /**
+     * @return a String containing item's name, price as String and quantity : {“X, $10.00", quantity : 2"}  
+     * if bulkQuantity is not zero and bulkPrice is not zero, ra string containing item's bulk quantity and bulk price
+     * : {“X, $19.99 (5 for $89.99), quantity : 2”}  
+     * 
+     * {@inheritDoc} 
+     */
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(myCart);
+        
+        return sb.toString();
+    }
+    
+}

@@ -1,0 +1,19 @@
+###############################################################################################
+# Users file.                                                                                 #
+#                                                                                             #
+# User credentialling information is stored in this file.                                     #
+# The password is NOT stored as plain text. It is salted and hashed. Both the Salt and Hash   #
+# are stored in this file.                                                                    #
+# If you are interested in cryptography/security, or just want to know about WHY we are       #
+# storing the password this way, you might find the following links as interesting starting   #
+# points:                                                                                     #
+#    https://auth0.com/blog/adding-salt-to-hashing-a-better-way-to-store-passwords/           #
+#    https://en.wikipedia.org/wiki/Salt_(cryptography)                                        #
+#                                                                                             #
+# Line Format                                                                                 #
+# username;salt;hash;campus                                                                   #
+###############################################################################################
+test;-108:27:105:57:-42:126:-48:-42:-95:-85:-54:-54:-22:123:93:-120:;-121:11:11:-34:-9:-72:21:-9:-106:118:107:5:-111:-44:6:-43:;Tacoma
+qqq;-45:-98:61:112:79:24:71:-117:42:-47:-89:10:79:-11:-113:-35:;-89:124:-28:116:16:-69:30:-119:117:-32:6:-87:-4:-23:-104:-82:;Bothell
+qqqq;14:-105:70:-119:86:-112:41:47:-89:-96:-72:52:-101:-11:80:40:;-31:-127:75:-66:39:87:-9:-124:63:8:1:-58:123:-97:-127:58:;Bothell
+sss;-86:80:-42:-27:108:22:119:114:106:-18:48:-55:-11:-103:-70:37:;-55:-61:-65:69:42:-58:60:80:-50:11:-125:-100:-17:97:-65:-31:;Bothell

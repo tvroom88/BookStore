@@ -1,0 +1,206 @@
+package tests;
+
+import static org.junit.Assert.*;
+
+import java.math.BigDecimal;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import model.Cart;
+import model.Item;
+import model.ItemOrder;
+
+public class TestCart {
+
+    // Declare objects to use in the test fixture.
+    
+    /** An item to use in tests. */
+    private Item myItem;
+    
+    /** An itemOrder to use in tests. */
+    private ItemOrder myOrder;
+    
+    /** An Cart to use in tests. */
+    private Cart myNewCart;
+    
+    @Before
+    public void setUp() throws Exception {
+        myItem = new Item("notebook", new BigDecimal("2.00"), 10, new BigDecimal("18.00"));   
+        myOrder = new ItemOrder(myItem, 10);
+        myNewCart = new Cart();
+    }
+
+ 
+    /**
+     * Test method for {@link ItemOrder#add(java.lang.Objects)}.
+     */
+    
+    @Test
+    public void testAdd() {
+        
+        final Item myItemOne = new Item("pensil", new BigDecimal("3.00"), 10, new BigDecimal("22.00")); 
+        final Item myItemtwo = new Item("eraser", new BigDecimal("2.00"), 5, new BigDecimal("8.00"));   
+        final Item myItemThree = new Item("paper", new BigDecimal("1.00"), 3, new BigDecimal("2.50"));   
+        
+        final ItemOrder myOrderOne = new ItemOrder(myItemOne, 12);
+        final ItemOrder myOrderTwo = new ItemOrder(myItemtwo, 8);
+        final ItemOrder myOrderThree = new ItemOrder(myItemThree, 5);
+        
+        //added first item well
+        myNewCart.add(myOrderOne);
+        assertEquals("added first item", "{pensil, $3.00 (10 for $22.00)=28.00}" , myNewCart.toString());
+        
+        //added second item well
+        myNewCart.add(myOrderTwo);
+        assertEquals("added second item well", "{eraser, $2.00 (5 for $8.00)=14.00, pensil, $3.00 (10 for $22.00)=28.00}",  myNewCart.toString());      
+   
+        //added third item well
+        myNewCart.add(myOrderThree);
+        assertEquals("added third item well", "{eraser, $2.00 (5 for $8.00)=14.00, paper, $1.00 (3 for $2.50)=4.50, pensil, $3.00 (10 for $22.00)=28.00}" , myNewCart.toString());
+
+    }
+    
+    /**
+     * Test method for {@link ItemOrder#totalCost()}.
+     * Check method for {@link ItemOrder#setMembership()}.
+     */
+    @Test
+    public void testCalculateTotal() {
+       
+        boolean membership = false;
+        myNewCart.setMembership(membership);
+        
+        final Item myItemOne = new Item("pensil", new BigDecimal("3.00"), 10, new BigDecimal("22.00")); 
+        final Item myItemtwo = new Item("eraser", new BigDecimal("2.00"), 5, new BigDecimal("8.00"));   
+        final Item myItemThree = new Item("paper", new BigDecimal("1.00"), 3, new BigDecimal("2.50"));
+        
+        //item without bulk quantity and bulk price
+        final Item myItemfour = new Item("airplane", new BigDecimal("2.21"));
+        
+        //I didn't set this part as final because the number of quantity can be changed later;
+        ItemOrder myOrderOne = new ItemOrder(myItemOne, 12);
+        ItemOrder myOrderTwo = new ItemOrder(myItemtwo, 8);
+        ItemOrder myOrderThree = new ItemOrder(myItemThree, 5);
+        ItemOrder myOrderfour = new ItemOrder(myItemfour, 10);
+        
+        
+        //if Item is none in Cart
+        assertEquals("add first item well, but calculate total cost well", new BigDecimal("0.00"),myNewCart.calculateTotal());
+        
+        myNewCart.add(myOrderOne);
+        assertEquals("add first item well, but calculate total cost well", new BigDecimal("28.00"),myNewCart.calculateTotal());
+        
+        //28  +  14
+        myNewCart.add(myOrderTwo);
+        assertEquals("add second item well, but calculate total cost well", new BigDecimal("42.00"),myNewCart.calculateTotal());
+        
+   
+        myNewCart.add(myOrderThree);
+        assertEquals("add third item well, but calculate total cost well", new BigDecimal("46.50"),myNewCart.calculateTotal());
+        
+        
+        myNewCart.add(myOrderfour);
+        assertEquals("add fourth item well, but calculate total cost well", new BigDecimal("68.60"),myNewCart.calculateTotal());
+       
+    
+        //If a number of item is changed, check the update well or not
+        myOrderOne = new ItemOrder(myItemOne, 3);
+        myNewCart.add(myOrderOne);
+        assertEquals("add first item well, but calculate total cost well", new BigDecimal("49.60"),myNewCart.calculateTotal());
+        
+        //test total cost when I have membership
+        //private static final BigDecimal DISCOUNT = new BigDecimal("0.05");
+
+        membership = true;
+        myNewCart.setMembership(membership);
+        assertEquals("set membership, and calculate total cost well", new BigDecimal("47.12"),myNewCart.calculateTotal());
+        
+        //After clear my cart
+        myNewCart.clear();
+        assertEquals("add first item well, but calculate total cost well", new BigDecimal("0.00"),myNewCart.calculateTotal());
+
+    }
+    
+    /**
+     * Test method for {@link ItemOrder#clear()}.
+     */
+    @Test
+    public void testClear() {
+        final Item myItemOne = new Item("pensil", new BigDecimal("3.00"), 10, new BigDecimal("22.00")); 
+        final Item myItemtwo = new Item("eraser", new BigDecimal("2.00"), 5, new BigDecimal("8.00"));   
+        final Item myItemThree = new Item("paper", new BigDecimal("1.00"), 3, new BigDecimal("2.50"));   
+        
+        final ItemOrder myOrderOne = new ItemOrder(myItemOne, 12);
+        final ItemOrder myOrderTwo = new ItemOrder(myItemtwo, 8);
+        final ItemOrder myOrderThree = new ItemOrder(myItemThree, 5);
+        
+        myNewCart.add(myOrder);
+        myNewCart.add(myOrderOne);
+        myNewCart.add(myOrderTwo);   
+        myNewCart.add(myOrderThree);
+        
+        // toString() will return {} and getCartSize() will return 0 because I use clear
+        myNewCart.clear();
+        assertEquals(0, myNewCart.getCartSize());
+        assertEquals("{}" , myNewCart.toString());
+    }
+    
+    /**
+     * Test method for {@link ItemOrder#getCartSize()}.
+     */
+    @Test
+    public void testCartSize() {
+        final Item myItemOne = new Item("pensil", new BigDecimal("3.00"), 10, new BigDecimal("22.00")); 
+        final Item myItemtwo = new Item("eraser", new BigDecimal("2.00"), 5, new BigDecimal("8.00"));   
+        final Item myItemThree = new Item("paper", new BigDecimal("1.00"), 3, new BigDecimal("2.50"));   
+        
+        final ItemOrder myOrderOne = new ItemOrder(myItemOne, 12);
+        final ItemOrder myOrderTwo = new ItemOrder(myItemtwo, 8);
+        final ItemOrder myOrderThree = new ItemOrder(myItemThree, 5);
+        
+        myNewCart.add(myOrderOne);
+        assertEquals(1, myNewCart.getCartSize());
+        
+        myNewCart.add(myOrderTwo);
+        assertEquals(2, myNewCart.getCartSize());      
+   
+        myNewCart.add(myOrderThree);
+        assertEquals(3, myNewCart.getCartSize());
+        
+        myNewCart.add(myOrder);
+        assertEquals(4, myNewCart.getCartSize());
+        
+        //I used clear so I will be return 0
+        myNewCart.clear();
+        assertEquals(0, myNewCart.getCartSize());
+        
+    }
+    
+    /**
+     * Test method for {@link ItemOrder#toString()}.
+     */
+    @Test
+    public void testCartToString() {
+        final Item myItemOne = new Item("pensil", new BigDecimal("3.00"), 10, new BigDecimal("22.00")); 
+        final Item myItemtwo = new Item("eraser", new BigDecimal("2.00"), 5, new BigDecimal("8.00"));   
+        final Item myItemThree = new Item("paper", new BigDecimal("1.00"), 3, new BigDecimal("2.50"));   
+        
+        final ItemOrder myOrderOne = new ItemOrder(myItemOne, 12);
+        final ItemOrder myOrderTwo = new ItemOrder(myItemtwo, 8);
+        final ItemOrder myOrderThree = new ItemOrder(myItemThree, 5);
+        
+        myNewCart.add(myOrderOne);
+        assertEquals("", "{pensil, $3.00 (10 for $22.00)=28.00}" , myNewCart.toString());
+        
+        myNewCart.add(myOrderTwo);
+        assertEquals("", "{eraser, $2.00 (5 for $8.00)=14.00, pensil, $3.00 (10 for $22.00)=28.00}",  myNewCart.toString());      
+   
+        myNewCart.add(myOrderThree);
+        assertEquals("", "{eraser, $2.00 (5 for $8.00)=14.00, paper, $1.00 (3 for $2.50)=4.50, pensil, $3.00 (10 for $22.00)=28.00}" , myNewCart.toString());
+   
+    }
+    //-------------------------------------- end Cart test -------------------------------------------
+
+
+}
